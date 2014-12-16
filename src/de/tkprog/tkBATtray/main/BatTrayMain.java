@@ -1,6 +1,8 @@
 package de.tkprog.tkBATtray.main;
 
 import java.awt.CheckboxMenuItem;
+import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Menu;
 import java.awt.MenuItem;
@@ -55,13 +57,16 @@ public class BatTrayMain {
 	}
 	
 	private void updateIcon() {
-		// TODO Auto-generated method stub
-		
+		BufferedImage image = new BufferedImage(20,20,BufferedImage.TYPE_4BYTE_ABGR);
+		Graphics g = image.getGraphics();
+		g.setColor(new Color(255,0,0,255));
+		g.fillRect(0, 0, image.getWidth(), (int)((double)image.getHeight()*((double)(100-BIAL.getCapacity())/(double)100)));
+		g.setColor(new Color(0,255,0,255));
+		g.fillRect(0, (int)((double)image.getHeight()*((double)(100-BIAL.getCapacity())/(double)100)), image.getWidth(), (int)((double)image.getHeight()*((double)(BIAL.getCapacity())/(double)100)));
+		trayIcon.setImage(image);
 	}
 
 	private void calculateInfos() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	private void gatherInfos() {
