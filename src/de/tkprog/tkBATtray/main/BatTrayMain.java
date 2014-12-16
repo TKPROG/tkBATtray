@@ -82,7 +82,7 @@ public class BatTrayMain {
 					sleepTime = Long.parseLong(getProperty(config_sleepTime));
 				} catch(Exception e){
 					e.printStackTrace();
-					sleepTime=1000;
+					sleepTime=5000;
 				}
 				while(run){
 					update();
@@ -175,7 +175,7 @@ public class BatTrayMain {
 		}
 		else if(con.equals(config_sleepTime)){
 			System.out.println("# Found config_sleepTime!");
-			return "1000";
+			return "5000";
 		}
 		else if(con.equals(batdir_config)){
 			System.out.println("# Found batdir_config!");
