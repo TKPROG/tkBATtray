@@ -24,6 +24,7 @@ public class BatTrayMain {
 	
 	private static final String config_trayiconimageurl = "trayiconimageurl";
 	protected static final String config_sleepTime = "updateintervall";
+	private static final String batdir_config = "";
 
 	public static void main(String[] args) {
 		new BatTrayMain();
@@ -34,8 +35,10 @@ public class BatTrayMain {
 	private TrayIcon trayIcon;
 	private SystemTray tray;
 	private boolean run = true;
+	private BatteryInformation_ArchLinux BIAL;
 	
 	public BatTrayMain(){
+		BIAL = new BatteryInformation_ArchLinux();
 		try{
 			loadConfiguration();
 			startTrayIcon();
@@ -62,6 +65,7 @@ public class BatTrayMain {
 	}
 
 	private void gatherInfos() {
+		BIAL.update(getProperty(batdir_config));
 	}
 
 	private void startUpdateThread() {
@@ -168,6 +172,10 @@ public class BatTrayMain {
 			System.out.println("# Found config_sleepTime!");
 			return "1000";
 		}
+		else if(con.equals(batdir_config)){
+			System.out.println("# Found batdir_config!");
+			return "/sys/class/power_supply/BAT/";
+		}
 		System.out.println("# Found nothing :(");
 		return null;
 	}
@@ -212,6 +220,7 @@ public class BatTrayMain {
 		config = new Properties();
 		config.put(config_trayiconimageurl, getPropertyDefault(config_trayiconimageurl));
 		config.put(config_sleepTime, getPropertyDefault(config_sleepTime));
+		config.put(batdir_config, getPropertyDefault(batdir_config));
 	}
 
 }
