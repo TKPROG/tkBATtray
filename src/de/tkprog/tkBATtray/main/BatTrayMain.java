@@ -31,32 +31,6 @@ public class BatTrayMain {
 	public static final boolean show_debug_messages = true;
 	public static final boolean show_error_messages = true;
 	public static final boolean show_info_messages = true;
-	public static final String logFileLocation = "tkBATtray_"+System.currentTimeMillis()+".log";
-	
-	public static void logError(String msg){
-		log("[ERROR] "+msg);
-	}
-	
-	public static void logInfo(String msg){
-		log("[INFO]  "+msg);
-	}
-	
-	public static void logDebug(String msg){
-		log("[DEBUG] "+msg);
-	}
-	
-	public static void log(String msg){
-		String d = "["+time()+"] "+msg;
-		logToFile(d);
-		System.out.println(d);
-	}
-
-	private static String time() {
-		return null;
-	}
-
-	private static void logToFile(String d) {
-	}
 
 	public static void main(String[] args) {
 		new BatTrayMain();
