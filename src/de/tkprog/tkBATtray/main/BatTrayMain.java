@@ -27,6 +27,26 @@ public class BatTrayMain {
 	private static final String config_trayiconimageurl = "trayiconimageurl";
 	protected static final String config_sleepTime = "updateintervall";
 	private static final String batdir_config = "";
+	
+	public static final boolean show_debug_messages = true;
+	public static final boolean show_error_messages = true;
+	public static final boolean show_info_messages = true;
+	
+	public static void logError(String msg){
+		
+	}
+	
+	public static void logInfo(String msg){
+		
+	}
+	
+	public static void logDebug(String msg){
+		
+	}
+	
+	public static void log(String msg){
+		
+	}
 
 	public static void main(String[] args) {
 		new BatTrayMain();
