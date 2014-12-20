@@ -42,9 +42,11 @@ public class BatTrayMain {
 	private SystemTray tray;
 	private boolean run = true;
 	private BatteryInformation_ArchLinux BIAL;
+	private IconImageGen iig;
 	
 	public BatTrayMain(){
 		BIAL = new BatteryInformation_ArchLinux();
+		iig = new IconImageGen();
 		try{
 			loadConfiguration();
 			startTrayIcon();
@@ -61,13 +63,10 @@ public class BatTrayMain {
 	}
 	
 	private void updateIcon() {
-		BufferedImage image = new BufferedImage(20,20,BufferedImage.TYPE_4BYTE_ABGR);
-		Graphics g = image.getGraphics();
-		g.setColor(new Color(255,0,0,255));
-		g.fillRect(0, 0, image.getWidth(), (int)((double)image.getHeight()*((double)(100-BIAL.getCapacity())/(double)100)));
-		g.setColor(new Color(0,255,0,255));
-		g.fillRect(0, (int)((double)image.getHeight()*((double)(100-BIAL.getCapacity())/(double)100)), image.getWidth(), (int)((double)image.getHeight()*((double)(BIAL.getCapacity())/(double)100)));
-		trayIcon.setImage(image);
+		BufferedImage d = iig.getImage(BIAL);
+		if(d != null){
+			trayIcon.setImage(d);
+		}
 	}
 
 	private void calculateInfos() {
