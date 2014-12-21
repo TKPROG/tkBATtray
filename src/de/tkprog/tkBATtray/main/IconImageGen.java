@@ -16,10 +16,11 @@ public class IconImageGen {
 	
 	public BufferedImage getImage(BatteryInformation_ArchLinux BIAL){
 		BufferedImage out = null;
+		Graphics g = null;
 		switch(type){
 			case TYPE_SIMPLE_TWO_COLOUR:
-				double filled = (double)(100-BIAL.getCapacity())/100.0d;
-				double emptied = (double)BIAL.getCapacity()/100.0d;
+				double emptied = (double)(100-BIAL.getCapacity())/100.0d;
+				double filled = (double)BIAL.getCapacity()/100.0d;
 				if(filled>1.0d){
 					filled = 1.0d;
 				}
@@ -32,13 +33,27 @@ public class IconImageGen {
 				else if(emptied<0.0d){
 					emptied = 0.0d;
 				}
-				if(width<)
+				if(width<=0){
+					return null;
+				}
+				if(height<=0){
+					return null;
+				}
+				
 				out = new BufferedImage(getWidth(),getHeight(),BufferedImage.TYPE_4BYTE_ABGR);
-				Graphics g = out.getGraphics();
+				g = out.getGraphics();
 				g.setColor(new Color(255,0,0,255));
 				g.fillRect(0, 0, out.getWidth(), (int)((double)out.getHeight()*emptied));
 				g.setColor(new Color(0,255,0,255));
-				g.fillRect(0, (int)((double)out.getHeight()*filled), out.getWidth(), (int)((double)out.getHeight()*filled));
+				g.fillRect(0, (int)((double)out.getHeight()*emptied), out.getWidth(), (int)((double)out.getHeight()*filled));
+				break;
+			case TYPE_ONLY_PERCENTAGE:
+				out = new BufferedImage(getWidth(),getHeight(),BufferedImage.TYPE_4BYTE_ABGR);
+				g = out.getGraphics();
+				g.setColor(Color.black);
+				g.fillRect(0,0,out.getWidth(),out.getHeight());
+				g.setColor(Color.white);
+				g.drawString(String.valueOf(BIAL.getCapacity()), 0, 0);
 				break;
 		}
 		return out;

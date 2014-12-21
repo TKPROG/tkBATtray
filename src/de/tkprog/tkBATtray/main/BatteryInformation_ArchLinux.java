@@ -112,7 +112,11 @@ public class BatteryInformation_ArchLinux {
 		}
 	}
 	
-	private String readFile(String file) {
+	private String readFile(String file){
+		return readFile(file, false);
+	}
+	
+	private String readFile(String file, boolean debug) {
 		try{
 			BufferedReader bf = new BufferedReader(new InputStreamReader(new FileInputStream(new File(file))));
 			String d = "";
@@ -122,7 +126,7 @@ public class BatteryInformation_ArchLinux {
 					d+=String.valueOf((char)a);
 				}
 			}
-			System.out.println("Read from \""+file+"\":\n\t"+d);
+			if(debug)System.out.println("Read from \""+file+"\":\n\t"+d);
 			return d;
 		} catch(Exception e){
 			e.printStackTrace();

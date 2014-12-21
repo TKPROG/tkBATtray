@@ -1,8 +1,6 @@
 package de.tkprog.tkBATtray.main;
 
 import java.awt.CheckboxMenuItem;
-import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Menu;
 import java.awt.MenuItem;
@@ -12,9 +10,7 @@ import java.awt.TrayIcon;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.Properties;
 
 import javax.imageio.ImageIO;
@@ -43,10 +39,18 @@ public class BatTrayMain {
 	private boolean run = true;
 	private BatteryInformation_ArchLinux BIAL;
 	private IconImageGen iig;
+//	public static AsyncLogger logger;
 	
 	public BatTrayMain(){
+//		logger = new AsyncLogger(
+//				new LoggerContext("LoggerContextFun"), 
+//				"LoggerFun", 
+//				new MessageFormatMessageFactory());
+//		logger.debug("DEBUGGGG");
 		BIAL = new BatteryInformation_ArchLinux();
 		iig = new IconImageGen();
+		iig.setWidth(20);
+		iig.setHeight(20);
 		try{
 			loadConfiguration();
 			startTrayIcon();
