@@ -11,7 +11,17 @@ public class Logger {
 		}
 	}
 	
+	private void logInfo(String msg){
+		
+	}
 	
+	private void log(String msg){
+		
+	}
+	
+	private void logln(String msg){
+		log("\r\n"+msg);
+	}
 	
 	private void openStream(String path) {
 		
