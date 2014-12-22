@@ -20,19 +20,11 @@ public class BatTrayMain {
 	private static final String configfile = "battray.conf";
 	private static final String configfilecomment = "This is the configuration file of the tkBATtray";
 	
-	private static final String config_trayiconimageurl = "trayiconimageurl";
-	protected static final String config_sleepTime = "updateintervall";
-	private static final String batdir_config = "";
-	
-	public static final boolean show_debug_messages = true;
-	public static final boolean show_error_messages = true;
-	public static final boolean show_info_messages = true;
-
 	public static void main(String[] args) {
 		new BatTrayMain();
 	}
 
-	private Properties config;
+	private Config config;
 	private PopupMenu popup;
 	private TrayIcon trayIcon;
 	private SystemTray tray;
@@ -42,6 +34,7 @@ public class BatTrayMain {
 //	public static AsyncLogger logger;
 	
 	public BatTrayMain(){
+		Config.getInstance().load(configfile);
 //		logger = new AsyncLogger(
 //				new LoggerContext("LoggerContextFun"), 
 //				"LoggerFun", 
@@ -51,13 +44,8 @@ public class BatTrayMain {
 		iig = new IconImageGen();
 		iig.setWidth(20);
 		iig.setHeight(20);
-		try{
-			loadConfiguration();
-			startTrayIcon();
-			startUpdateThread();
-		} catch(Exception e){
-			e.printStackTrace();
-		}
+		startTrayIcon();
+		startUpdateThread();
 	}
 
 	private void update() {
@@ -77,7 +65,7 @@ public class BatTrayMain {
 	}
 
 	private void gatherInfos() {
-		BIAL.update(getProperty(batdir_config));
+		BIAL.update(Config.getInstance().getProperty(Config_defaults.batDirFolderLocation));
 	}
 
 	private void startUpdateThread() {
@@ -86,7 +74,7 @@ public class BatTrayMain {
 			@Override
 			public void run() {
 				try{
-					sleepTime = Long.parseLong(getProperty(config_sleepTime));
+					sleepTime = Long.parseLong(Config.getInstance().getProperty(Config_defaults.updateThreadSleepTime));
 				} catch(Exception e){
 					e.printStackTrace();
 					sleepTime=5000;
@@ -113,15 +101,12 @@ public class BatTrayMain {
 		}
 		System.out.println(" SUPPORTED :)");
 		System.out.println("Loading TrayIconImage...");
-		Image trayiconimage = null;
-		if((trayiconimage = loadTrayIconImage(getProperty(config_trayiconimageurl)))==null){
-			System.out.println("ERR.: Wasn't able to load the image at '"+getProperty(config_trayiconimageurl)+"'\nQuitting");
-			return;
-		}
+		BIAL.update(Config.getInstance().getProperty(Config_defaults.batDirFolderLocation));
+		BufferedImage d = iig.getImage(BIAL);
 		
 		System.out.println("\tGenerating Instances...");
 		popup = new PopupMenu();
-		trayIcon = new TrayIcon(trayiconimage);
+		trayIcon = new TrayIcon(d);
         tray = SystemTray.getSystemTray();
        
         // Create a pop-up menu components
@@ -158,81 +143,6 @@ public class BatTrayMain {
 			System.out.println("ERR.: TrayIcon could not be added.\nQuitting");
 			return;
         }
-	}
-
-	private String getProperty(String con) {
-		System.out.println("# Getting property...");
-		if(config.containsKey(con)){
-			System.out.println("# Found some and giving it back!");
-			return config.getProperty(con);
-		}
-		System.out.println("# Didn't found it...");
-		config.put(con, getPropertyDefault(con));
-		storeConfiguration();
-
-		System.out.println("# Returning:");
-		return getProperty(con);
-	}
-
-	private Object getPropertyDefault(String con) {
-		System.out.println("# Searching for Property Default...");
-		if(con.equals(config_trayiconimageurl)){
-			System.out.println("# Found config_trayiconimageurl!");
-			return "batttray_icon.png";
-		}
-		else if(con.equals(config_sleepTime)){
-			System.out.println("# Found config_sleepTime!");
-			return "5000";
-		}
-		else if(con.equals(batdir_config)){
-			System.out.println("# Found batdir_config!");
-			return "/sys/class/power_supply/BAT/";
-		}
-		System.out.println("# Found nothing :(");
-		return null;
-	}
-
-	private Image loadTrayIconImage(String trayiconimageurl2) {
-		Image out = null;
-		try {
-			out = ImageIO.read(new File(trayiconimageurl2));
-			System.out.println("* Loaded Image *");
-			out = (out.getScaledInstance(20, 20, Image.SCALE_DEFAULT));
-			System.out.println("\tScaled to: "+16+"x"+16);
-		} catch (Exception e) {
-			e.printStackTrace();
-			out = null;
-		}
-		return out;
-	}
-
-	private void loadConfiguration() {
-		System.out.println("Loading Configuration...");
-		config = new Properties();
-		try {
-			config.load(new FileInputStream(new File(configfile)));
-		} catch (Exception e) {
-			e.printStackTrace();
-			generateDefaultConfiguration();
-			storeConfiguration();
-		}
-	}
-
-	private void storeConfiguration() {
-		try {
-			System.out.print("Storing configuration... ");
-			config.store(new FileOutputStream(new File(configfile)), configfilecomment);
-			System.out.println(" DONE");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	private void generateDefaultConfiguration() {
-		config = new Properties();
-		config.put(config_trayiconimageurl, getPropertyDefault(config_trayiconimageurl));
-		config.put(config_sleepTime, getPropertyDefault(config_sleepTime));
-		config.put(batdir_config, getPropertyDefault(batdir_config));
 	}
 
 }
