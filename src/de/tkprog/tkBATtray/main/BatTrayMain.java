@@ -8,9 +8,12 @@ import java.awt.PopupMenu;
 import java.awt.SystemTray;
 import java.awt.TrayIcon;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Properties;
 
 import javax.imageio.ImageIO;
@@ -19,27 +22,62 @@ public class BatTrayMain {
 
 	private static final String configfile = "battray.conf";
 	private static final String configfilecomment = "This is the configuration file of the tkBATtray";
+	private static BufferedReader br;
 	
 	public static void main(String[] args) {
+		logger = new Logger("log/log_"+System.currentTimeMillis()+".log");
+		logger.logln("*---------------------------------------------*");
+		logger.logln("*          tkBATtray - Battery widget         *");
+		logger.logln("*                 by TKPRO(G)                 *");
+		logger.logln("*---------------------------------------------*\r\n");
+		
+		checkSystem();
+		
 		new BatTrayMain();
 	}
 
-	private Config config;
+	private static boolean checkSystem() {
+		String sys = getSystem();
+		logger.logDebugln("Running \""+sys+"\"");
+		if(sys.contains("Lin") || sys.contains("lin")){
+			logger.logDebugln("\tACCEPTED");
+		}
+		else{
+			logger.logln("You're not running a Linux distribution. Do you really want to continue? (y/N): ");
+			br = new BufferedReader(new InputStreamReader(System.in));
+			try {
+				String l = br.readLine();
+				logger.logDebugln("User answered \""+l+"\".");
+				if(l.equalsIgnoreCase("y")){
+					logger.logDebugln("\tcontinuing");
+					return true;
+				}
+				else{
+					logger.logDebugln("\tstoping");
+				}
+			} catch (Exception e) {
+				logger.logError(e);
+			}
+			logger.logErrorln("Exiting program");
+			System.exit(0);
+		}
+		return false;
+	}
+
+	private static String getSystem() {
+		return System.getProperty("os.name");
+	}
+
 	private PopupMenu popup;
 	private TrayIcon trayIcon;
 	private SystemTray tray;
 	private boolean run = true;
 	private BatteryInformation_ArchLinux BIAL;
 	private IconImageGen iig;
-//	public static AsyncLogger logger;
+	public static Logger logger;
 	
 	public BatTrayMain(){
 		Config.getInstance().load(configfile);
-//		logger = new AsyncLogger(
-//				new LoggerContext("LoggerContextFun"), 
-//				"LoggerFun", 
-//				new MessageFormatMessageFactory());
-//		logger.debug("DEBUGGGG");
 		BIAL = new BatteryInformation_ArchLinux();
 		iig = new IconImageGen();
 		iig.setWidth(20);
@@ -93,18 +131,19 @@ public class BatTrayMain {
 	}
 
 	private void startTrayIcon() {
-		System.out.println("Starting Tray Icon...");
-		System.out.print("Checking if supported...");
+		logger.logInfoln("Starting Tray Icon...");
+		logger.logInfoln("Checking if supported...");
 		if(!SystemTray.isSupported()){
-			System.out.println("\nERR.: SystemTray is not supported!\nQuitting");
+			logger.logErrorln("ERR.: SystemTray is not supported!");
+			logger.logErrorln("Quitting");
 			return;
 		}
-		System.out.println(" SUPPORTED :)");
-		System.out.println("Loading TrayIconImage...");
+		logger.log(" SUPPORTED :)");
+		logger.logInfoln("Loading TrayIconImage...");
 		BIAL.update(Config.getInstance().getProperty(Config_defaults.batDirFolderLocation));
 		BufferedImage d = iig.getImage(BIAL);
 		
-		System.out.println("\tGenerating Instances...");
+		logger.logInfoln("\tGenerating Instances...");
 		popup = new PopupMenu();
 		trayIcon = new TrayIcon(d);
         tray = SystemTray.getSystemTray();
@@ -135,12 +174,12 @@ public class BatTrayMain {
        
         trayIcon.setPopupMenu(popup);
         
-		System.out.println("\tAdding Tray Icon...");
+		logger.logInfoln("\tAdding Tray Icon...");
        
         try {
             tray.add(trayIcon);
         } catch (Exception e) {
-			System.out.println("ERR.: TrayIcon could not be added.\nQuitting");
+			logger.logErrorln("ERR.: TrayIcon could not be added.\nQuitting");
 			return;
         }
 	}
