@@ -48,6 +48,9 @@ public class IconImageGen {
 				out = new BufferedImage(getWidth(),getHeight(),BufferedImage.TYPE_4BYTE_ABGR);
 				g = out.getGraphics();
 				g.setColor(new Color(255,0,0,255));
+				if(BIAL.getStatus().equalsIgnoreCase("charging")){
+					g.setColor(Color.YELLOW);
+				}
 				g.fillRect(0, 0, out.getWidth(), (int)((double)out.getHeight()*emptied));
 				g.setColor(new Color(0,255,0,255));
 				g.fillRect(0, (int)((double)out.getHeight()*emptied), out.getWidth(), (int)((double)out.getHeight()*filled));
@@ -87,6 +90,9 @@ public class IconImageGen {
 				out = new BufferedImage(getWidth(),getHeight(),BufferedImage.TYPE_4BYTE_ABGR);
 				g = out.getGraphics();
 				g.setColor(new Color(255,0,0,255));
+				if(BIAL.getStatus().equalsIgnoreCase("charging")){
+					g.setColor(Color.YELLOW);
+				}
 				g.fillRect(0, 0, out.getWidth(), (int)((double)out.getHeight()*emptied));
 				g.setColor(new Color(0,255,0,255));
 				g.fillRect(0, (int)((double)out.getHeight()*emptied), out.getWidth(), (int)((double)out.getHeight()*filled));

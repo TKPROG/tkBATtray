@@ -1,0 +1,13 @@
+
+*---------------------------------------------*
+*          tkBATtray - Battery widget         *
+*                 by TKPRO(G)                 *
+*---------------------------------------------*
+
+[28.12.2014 01:52:08(:156)] [DEBUG]   Running "Linux"
+[28.12.2014 01:52:08(:157)] [DEBUG]   	ACCEPTED
+[28.12.2014 01:52:08(:160)] [INFO]    Starting Tray Icon...
+[28.12.2014 01:52:08(:160)] [INFO]    Checking if supported... SUPPORTED :)
+[28.12.2014 01:52:08(:255)] [INFO]    Loading TrayIconImage...
+[28.12.2014 01:52:08(:510)] [INFO]    	Generating Instances...
+[28.12.2014 01:52:08(:517)] [INFO]    	Adding Tray Icon...
